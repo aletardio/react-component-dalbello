@@ -89,19 +89,20 @@ body {
 .large-circle { position: absolute; left: 50%; top: calc(50% - 1271px); transform: translate(-50%, -50%); }
 .white-circle { width: 568px; height: 568px; background: rgba(255, 255, 255, 0.9); border: 2px solid #c8dbdf; border-radius: 50%; }
 
-/* Posizionamento prodotti (uguale a prima) */
-.product-container { position: absolute; inset: 0; }
-.product-img { position: absolute; max-width: none; object-fit: cover; }
-.product-rotated { position: absolute; display: flex; align-items: center; justify-content: center; }
+/* Stile comune per i prodotti */
+.product-item {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 200px; /* IMPOSTATO A 200PX COME RICHIESTO */
+  height: auto;
+  transform-origin: center center;
+  opacity: 1; /* Di default visibili, gestiamo animazione in JS */
+  transform: translate(-50%, -50%);
+  /* pointer-events: none; se non devono essere cliccabili */
+}
 
-.product-1 { left: calc(41.67% + 85.82px); top: 313.27px; width: 176.58px; height: 110.35px; }
-.product-2 { left: calc(33.33% + 61.04px); top: 465.92px; width: 183.56px; height: 208.08px; }
-.product-2 img { width: 176.58px; height: 110.35px; transform: rotate(60.17deg); }
-.product-3 { left: calc(41.67% + 65.23px); top: 152.03px; width: 155.07px; height: 172.39px; }
-.product-3 img { width: 105.8px; height: 141.1px; transform: rotate(24.69deg); }
-.product-4 { left: calc(41.67% + 85.82px); top: 313.27px; width: 176.58px; height: 110.35px; }
-.product-5 { left: calc(33.33% + 61.04px); top: 465.92px; width: 183.56px; height: 208.08px; }
-.product-5 img { width: 176.58px; height: 110.35px; transform: rotate(60.17deg); }
+
 
 /* --- TESTI DESKTOP --- */
 .text-content {
