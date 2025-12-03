@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Circular Carousel Animation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Top spacer -->
+  <div class="top-spacer"></div>
+
+  <!-- Main carousel container -->
+  <div id="carousel-container" class="carousel-container">
+    <div class="sticky-wrapper">
+      <div class="carousel-content">
+        
+        <!-- TITOLO MOBILE (Visibile solo su schermi piccoli) -->
+        <div class="mobile-main-title">
+          <h1>THE<br>CIRCULAR<br>JOURNEY</h1>
+        </div>
+
+        <!-- WRAPPER PER SCALARE LA GRAFICA SU MOBILE -->
+        <!-- Questo div contiene tutta l'animazione circolare -->
+        <div class="visuals-scale-wrapper">
+          
+          <!-- Cerchio tratteggiato fisso (Orbita) -->
+          <div id="orbit-container" class="orbit-container">
+            <div class="orbit-circle"></div>
+            <!-- Cerchi piccoli fissi -->
+            <div class="small-circle circle-120">
+              <div class="inner-white-circle"></div>
+            </div>
+            <div class="small-circle circle-240">
+               <div class="inner-white-circle"></div>
+            </div>
+          </div>
+
+          <!-- Container rotante principale -->
+          <div id="rotating-container" class="rotating-container">
+            
+            <!-- Step 01 -->
+            <div class="circle-with-elements" data-rotation="0">
+              <div class="large-circle">
+                <div class="white-circle"></div>
+              </div>
+            </div>
+
+            <!-- Step 02 -->
+            <div class="circle-with-elements" data-rotation="120">
+              <div class="large-circle">
+                <div class="white-circle"></div>
+              </div>
+            </div>
+
+            <!-- Step 03 -->
+            <div class="circle-with-elements" data-rotation="240">
+              <div class="large-circle">
+                <div class="white-circle"></div>
+              </div>
+            </div>
+          </div>
+          
+        </div> <!-- Fine visuals-scale-wrapper -->
+
+
+        <!-- Testi fissi (Step 1) -->
+        <div id="text-step-1" class="text-content">
+          <p class="step-number">01</p>
+          <div class="step-title step-title-blue">
+            <p>COLLECTING</p>
+            <p>& LOGISTICS</p>
+          </div>
+          <div class="step-description">
+            <div class="description-title">
+              <p>Collection of</p>
+              <p>End-of-Life Equipment.</p>
+            </div>
+            <p class="description-text">All the products will be collected through the rental shops network, that will compressively recover 10,000 end-of-life skis, boots and bindings.</p>
+          </div>
+        </div>
+
+        <!-- Testi fissi (Step 2) -->
+        <div id="text-step-2" class="text-content">
+          <p class="step-number">02</p>
+          <div class="step-title step-title-red">
+            <p>RECYCLING STEP</p>
+            <p>& RE-PROCESSING</p>
+          </div>
+          <div class="step-description">
+            <div class="description-title">
+              <p>Recycling Step</p>
+              <p>& Re-processing</p>
+            </div>
+            <p class="description-text">Advanced sorting and separation techniques break down equipment into component materials. The recycling process ensures maximum material recovery.</p>
+          </div>
+        </div>
+
+        <!-- Testi fissi (Step 3) -->
+        <div id="text-step-3" class="text-content">
+          <p class="step-number">03</p>
+          <div class="step-title step-title-teal">
+            <p>FINAL</p>
+            <p>PROCESSING</p>
+          </div>
+          <div class="step-description">
+            <div class="description-title">
+              <p>Re-Processing</p>
+              <p>Materials</p>
+            </div>
+            <p class="description-text">Materials are refined and reprocessed into high-quality inputs for new products. This final stage completes the circular journey.</p>
+          </div>
+        </div>
+
+        <!-- Label laterale "STEPS" -->
+        <div class="steps-label">
+          <p>STEPS</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom spacer -->
+  <div class="bottom-spacer"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

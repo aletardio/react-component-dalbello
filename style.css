@@ -1,0 +1,178 @@
+/* Reset di base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Clash Display', 'Arial', sans-serif;
+  background-color: white;
+  overflow-x: hidden;
+}
+
+.top-spacer, .bottom-spacer { height: 30vh; }
+.carousel-container { position: relative; height: 400vh; }
+.sticky-wrapper { position: sticky; top: 0; height: 100vh; overflow: hidden; width: 100%; }
+.carousel-content { position: relative; width: 100%; height: 100%; }
+
+/* --- NUOVO WRAPPER PER LA SCALA --- */
+.visuals-scale-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform-origin: center top; /* Punto di riferimento per la scala */
+}
+
+/* --- ORBITA --- */
+.orbit-container {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  width: 3300px;
+  height: 3300px;
+  transform: translateX(-50%); /* Stato iniziale */
+  transform-origin: center center; /* Ruota dal centro esatto */
+  pointer-events: none;
+  overflow: visible;
+  /* Rimuovi transition se vuoi sincronia 1:1 con lo scroll, altrimenti aggiungi per fluidità */
+}
+
+
+.orbit-circle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2544px;
+  height: 2544px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 3px dashed #c8dbdf; /* ORBITA TRATTEGGIATA CSS */
+  opacity: 0.5;
+  display: block;
+}
+
+.small-circle {
+  position: absolute;
+  width: 775px;
+  height: 775px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.inner-white-circle {
+  width: 568px;
+  height: 568px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 2px solid #c8dbdf;
+  border-radius: 50%;
+}
+
+.circle-120 { left: calc(50% + 1100.81px); top: calc(50% + 635.29px); transform: translate(-50%, -50%); }
+.circle-240 { left: calc(50% - 1101.05px); top: calc(50% + 635.29px); transform: translate(-50%, -50%); }
+
+/* --- CONTAINER ROTANTE --- */
+.rotating-container {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  width: 3300px;
+  height: 3300px;
+  transform: translateX(-50%); /* Rotazione gestita da JS */
+  transform-origin: center center;
+}
+
+.circle-with-elements { position: absolute; inset: 0; pointer-events: none; transform-origin: center center; }
+.large-circle { position: absolute; left: 50%; top: calc(50% - 1271px); transform: translate(-50%, -50%); }
+.white-circle { width: 568px; height: 568px; background: rgba(255, 255, 255, 0.9); border: 2px solid #c8dbdf; border-radius: 50%; }
+
+/* Posizionamento prodotti (uguale a prima) */
+.product-container { position: absolute; inset: 0; }
+.product-img { position: absolute; max-width: none; object-fit: cover; }
+.product-rotated { position: absolute; display: flex; align-items: center; justify-content: center; }
+
+.product-1 { left: calc(41.67% + 85.82px); top: 313.27px; width: 176.58px; height: 110.35px; }
+.product-2 { left: calc(33.33% + 61.04px); top: 465.92px; width: 183.56px; height: 208.08px; }
+.product-2 img { width: 176.58px; height: 110.35px; transform: rotate(60.17deg); }
+.product-3 { left: calc(41.67% + 65.23px); top: 152.03px; width: 155.07px; height: 172.39px; }
+.product-3 img { width: 105.8px; height: 141.1px; transform: rotate(24.69deg); }
+.product-4 { left: calc(41.67% + 85.82px); top: 313.27px; width: 176.58px; height: 110.35px; }
+.product-5 { left: calc(33.33% + 61.04px); top: 465.92px; width: 183.56px; height: 208.08px; }
+.product-5 img { width: 176.58px; height: 110.35px; transform: rotate(60.17deg); }
+
+/* --- TESTI DESKTOP --- */
+.text-content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+.step-number { position: absolute; left: calc(4.17% - 20px); top: 693.75px; font-size: 55px; font-weight: 600; color: black; }
+.step-title { position: absolute; left: calc(20.83% - 145.04px); top: 693.75px; font-size: 55px; font-weight: 600; line-height: 1; white-space: nowrap; }
+.step-title-blue { color: #244a9a; } .step-title-red { color: #9a2444; } .step-title-teal { color: #24949a; }
+.step-description { position: absolute; left: calc(75% - 5px); top: 583.75px; width: 325px; text-align: left; }
+.description-title { font-size: 20px; font-weight: 600; margin-bottom: 10px; color: black; }
+.description-text { font-size: 20px; line-height: 1.2; color: black; }
+.steps-label { position: absolute; right: calc(91.67% + 80px); top: 50%; transform: translate(100%, -50%); }
+.steps-label p { transform: rotate(270deg); font-size: 15px; font-weight: 700; letter-spacing: 0.3px; }
+.mobile-main-title { display: none; } /* Nascosto su desktop */
+
+/* --- MEDIA QUERIES MOBILE --- */
+@media screen and (max-width: 1024px) {
+  
+  .carousel-container { height: 350vh; }
+  
+  /* 1. SCALA TUTTA LA GRAFICA */
+  .visuals-scale-wrapper {
+    /* Scala tutto al 55% e sposta l'origine verso l'alto per centrarlo visivamente sotto il titolo */
+    transform: scale(0.55) translateY(150px); 
+    /* translateY sposta fisicamente il wrapper verso il basso DOPO la scala */
+  }
+
+  /* Aumentiamo lo spessore del bordo tratteggiato perché scalando si assottiglia */
+  .orbit-circle {
+    border-width: 5px; 
+  }
+
+  /* 2. TITOLO MOBILE */
+  .mobile-main-title {
+    display: block;
+    position: absolute;
+    top: 30px;
+    left: 20px;
+    right: 20px;
+    z-index: 20;
+  }
+  .mobile-main-title h1 {
+    font-size: 42px;
+    line-height: 0.9;
+    font-weight: 800;
+    color: #d0dadd; /* Colore simile al design */
+    text-transform: uppercase;
+  }
+
+  /* 3. LAYOUT TESTI MOBILE (In basso) */
+  .text-content {
+    top: auto;
+    bottom: 40px; /* Fissi in basso */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 20px;
+    background: linear-gradient(to top, rgba(255,255,255,1) 80%, rgba(255,255,255,0));
+    height: auto;
+    min-height: 300px;
+  }
+
+  .steps-label { display: none; }
+
+  .step-number { position: relative; top: auto; left: auto; font-size: 40px; margin-bottom: 5px; }
+  .step-title { position: relative; top: auto; left: auto; font-size: 36px; white-space: normal; margin-bottom: 20px; }
+  .step-description { position: relative; top: auto; left: auto; width: 100%; }
+}
