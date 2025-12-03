@@ -165,7 +165,7 @@ body {
   /* 1. SCALA TUTTA LA GRAFICA */
   .visuals-scale-wrapper {
     /* Scala tutto al 55% e sposta l'origine verso l'alto per centrarlo visivamente sotto il titolo */
-    transform: scale(0.55) translateY(150px); 
+    transform: scale(0.55) translateY(350px); 
     /* translateY sposta fisicamente il wrapper verso il basso DOPO la scala */
   }
 
