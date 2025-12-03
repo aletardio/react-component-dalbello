@@ -3,20 +3,38 @@ document.addEventListener('DOMContentLoaded', () => {
   const rotatingContainer = document.getElementById('rotating-container');
   const orbitContainer = document.getElementById('orbit-container');
   
+  // Elementi Video (selezionato dentro lo Step 2 o ovunque sia nell'HTML)
+  const videoContainer = document.getElementById('video-container');
+  const video = document.getElementById('scroll-video');
+  
   const textStep1 = document.getElementById('text-step-1');
   const textStep2 = document.getElementById('text-step-2');
   const textStep3 = document.getElementById('text-step-3');
   const circles = document.querySelectorAll('.circle-with-elements');
 
-  // Inizializzazione rotazioni base
+  // Setup Video
+  let videoDuration = 0;
+  if (video) {
+      video.addEventListener('loadedmetadata', () => {
+        videoDuration = video.duration;
+        video.currentTime = 0;
+      });
+      // Fallback nel caso i metadati siano già caricati
+      if (video.readyState >= 1) {
+          videoDuration = video.duration;
+          video.currentTime = 0;
+      }
+  }
+
+  // Inizializzazione rotazioni cerchi
   circles.forEach((circle) => {
     const initialRotation = parseFloat(circle.getAttribute('data-rotation'));
     circle.style.transform = `rotate(${initialRotation}deg)`;
   });
 
-  // --- CONFIGURAZIONE POSIZIONI (Coordinate per immagini da 200px) ---
-
-  // FUORI DAL CERCHIO
+  // --- COORDINATE PRODOTTI (Definite UNA sola volta qui) ---
+  
+  // Posizioni CERCHIO (Iniziali - Wide/Alternate)
   const circlePositions = [
     { x: -140, y: -280, rot: -60,  scale: 1 },  // 1
     { x: 240,  y: -160, rot: 50,   scale: 1 },  // 2
@@ -30,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { x: -60,  y: 20,   rot: -85,  scale: 1 }   // 10
   ];
 
-  // DENTRO IL CERCHIO
+  // Posizioni CAOS (Finali - Bilanciate)
   const chaosPositions = [
     { x: -110, y: -200, rot: -15, scale: 0.75 },  // 1
     { x: 130,  y: -130, rot: 45,  scale: 0.65 },  // 2
@@ -44,93 +62,119 @@ document.addEventListener('DOMContentLoaded', () => {
     { x: -15,  y: 15,   rot: -20, scale: 0.9 }    // 10
   ];
 
-
   function onScroll() {
     const rect = container.getBoundingClientRect();
     const scrollableDistance = container.offsetHeight - window.innerHeight;
     let progress = Math.min(Math.max(-rect.top / scrollableDistance, 0), 1);
 
-    const PHASE_1_END = 0.3;
+    // --- DEFINIZIONE FASI SCROLL ---
+    // FASE 1 (0% - 25%): Step 1 (Prodotti) al centro. Animazione implosione.
+    const P1_END = 0.25; 
     
-    let morphProgress = 0; 
-    let rotationProgress = 0; 
+    // TRANSITION (25% - 35%): Rotazione veloce dell'orbita (-120°). Step 1 esce, Step 2 arriva.
+    const TRANSITION_END = 0.35;
     
-    if (progress < PHASE_1_END) {
-      morphProgress = progress / PHASE_1_END; 
-      rotationProgress = 0; 
-    } else {
-      morphProgress = 1; 
-      rotationProgress = (progress - PHASE_1_END) / (1 - PHASE_1_END);
-    }
+    // FASE 2 (35% - 85%): Step 2 (Video) FERMO al centro. Scrubbing del video.
+    const P2_END = 0.85;
+    
+    // FASE 3 (85% - 100%): Step 2 esce. Rotazione orbita verso Step 3.
 
-    // Easing
-    const ease = 1 - Math.pow(1 - morphProgress, 3); 
+    let globalRotation = 0;
+    let productMorph = 0;
+    let videoSeek = 0;
 
-    // 1. ANIMAZIONE PRODOTTI (Da Cerchio a Caos)
-    const targetCircle = document.querySelector('.product-container').parentElement; 
-    
-    if (targetCircle) {
-        const products = targetCircle.querySelectorAll('.product-item');
+    if (progress < P1_END) {
+        // FASE 1: STEP 1 ATTIVO
+        globalRotation = 0; 
+        productMorph = progress / P1_END; // Da 0 a 1
+        videoSeek = 0;
+    } 
+    else if (progress < TRANSITION_END) {
+        // TRANSIZIONE: RUOTA ORBITA (-120)
+        const localProgress = (progress - P1_END) / (TRANSITION_END - P1_END);
+        globalRotation = -120 * localProgress;
         
-        products.forEach((prod, index) => {
-            if (index >= circlePositions.length) return;
-
-            const start = circlePositions[index];
-            const end = chaosPositions[index];
-
-            const currentX = start.x + (end.x - start.x) * ease;
-            const currentY = start.y + (end.y - start.y) * ease;
-            const currentRot = start.rot + (end.rot - start.rot) * ease;
-            const currentScale = start.scale + (end.scale - start.scale) * ease;
-
-            // translate(calc(-50% + X), calc(-50% + Y)) mantiene il centro dell'immagine come punto di riferimento
-            prod.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px)) rotate(${currentRot}deg) scale(${currentScale})`;
-            prod.style.opacity = 1; 
-        });
+        productMorph = 1; // Prodotti finiti
+        videoSeek = 0;
+    }
+    else if (progress < P2_END) {
+        // FASE 2: STEP 2 FERMO (VIDEO)
+        globalRotation = -120; // Bloccato su Step 2
+        
+        productMorph = 1;
+        // Mappa lo scroll (lungo) al tempo del video
+        videoSeek = (progress - TRANSITION_END) / (P2_END - TRANSITION_END);
+    }
+    else {
+        // FASE 3: USCITA
+        const localProgress = (progress - P2_END) / (1 - P2_END);
+        globalRotation = -120 + (-120 * localProgress); // Va verso -240
+        
+        productMorph = 1;
+        videoSeek = 1; // Video finito
     }
 
-    // 2. ROTAZIONE ORBITA
-    const totalRotationAngle = -240;
-    const currentRotation = totalRotationAngle * rotationProgress;
-    
-    rotatingContainer.style.transform = `translateX(-50%) rotate(${currentRotation}deg)`;
+    // --- APPLICAZIONI ---
+
+    // 1. ORBITA
+    rotatingContainer.style.transform = `translateX(-50%) rotate(${globalRotation}deg)`;
     if (orbitContainer) {
-        orbitContainer.style.transform = `translateX(-50%) rotate(${currentRotation}deg)`;
+        orbitContainer.style.transform = `translateX(-50%) rotate(${globalRotation}deg)`;
     }
 
-    // 3. CONTRO-ROTAZIONE
+    // 2. CONTRO-ROTAZIONE (Cruciale per tenere il video dritto)
     circles.forEach((circle) => {
         const initialRotation = parseFloat(circle.getAttribute('data-rotation'));
-        const currentGlobalRotation = initialRotation + currentRotation;
-        
+        const currentGlobalRotation = initialRotation + globalRotation;
         const largeCircle = circle.querySelector('.large-circle .white-circle');
         if (largeCircle) {
             largeCircle.style.transform = `rotate(${-currentGlobalRotation}deg)`;
         }
     });
 
-    // 4. TESTI
-    const r = currentRotation;
+    // 3. ANIMAZIONE PRODOTTI (Step 1)
+    const products = document.querySelectorAll('.product-item');
+    const ease = 1 - Math.pow(1 - productMorph, 3); 
     
-    // Step 1
-    let op1 = 0;
-    if (progress < PHASE_1_END) op1 = 1; 
-    else op1 = (r > -40) ? 1 - (r / -40) : 0;
-    textStep1.style.opacity = op1;
-    textStep1.style.pointerEvents = op1 > 0.1 ? 'auto' : 'none';
+    products.forEach((prod, index) => {
+        if (index < circlePositions.length) {
+            const start = circlePositions[index];
+            const end = chaosPositions[index];
+            
+            const currentX = start.x + (end.x - start.x) * ease;
+            const currentY = start.y + (end.y - start.y) * ease;
+            const currentRot = start.rot + (end.rot - start.rot) * ease;
+            const currentScale = start.scale + (end.scale - start.scale) * ease;
+            
+            prod.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px)) rotate(${currentRot}deg) scale(${currentScale})`;
+        }
+    });
 
-    // Step 2
+    // 4. VIDEO
+    if (video) {
+        if (Number.isFinite(videoDuration) && videoDuration > 0) {
+             video.currentTime = videoDuration * videoSeek;
+        }
+    }
+
+    // 5. TESTI
+    // Step 1: Visibile Fase 1
+    let op1 = (progress < P1_END) ? 1 : 1 - ((progress - P1_END) / (TRANSITION_END - P1_END) * 2);
+    textStep1.style.opacity = Math.max(0, op1);
+
+    // Step 2: Visibile Fase 2
     let op2 = 0;
-    if (r <= -40 && r > -80) op2 = (r + 40) / -40;
-    else if (r <= -80 && r > -120) op2 = 1;
-    else if (r <= -120 && r > -160) op2 = 1 - ((r + 120) / -40);
-    textStep2.style.opacity = op2;
-    
-    // Step 3
-    let op3 = 0;
-    if (r <= -160 && r > -200) op3 = (r + 160) / -40;
-    else if (r <= -200) op3 = 1;
-    textStep3.style.opacity = op3;
+    if (progress > P1_END && progress < P2_END) {
+        if (progress < TRANSITION_END) op2 = (progress - P1_END) / (TRANSITION_END - P1_END);
+        else op2 = 1;
+        // Fade out finale
+        if (progress > P2_END - 0.05) op2 = 1 - (progress - (P2_END - 0.05)) / 0.05;
+    }
+    textStep2.style.opacity = Math.max(0, Math.min(1, op2));
+
+    // Step 3: Visibile Fase 3
+    let op3 = (progress > P2_END) ? (progress - P2_END) / (1 - P2_END) * 2 : 0;
+    textStep3.style.opacity = Math.min(1, op3);
   }
 
   window.addEventListener('scroll', onScroll);

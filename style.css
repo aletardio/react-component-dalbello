@@ -102,7 +102,36 @@ body {
   /* pointer-events: none; se non devono essere cliccabili */
 }
 
+/* VIDEO / STEP 2 */
+.step-2 {
+  overflow: hidden;
+}
 
+.video-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Adatta width/height alla dimensione del cerchio bianco (che è circa 568px nel tuo CSS originale) */
+  width: 800px; 
+  height: 800px;
+  z-index: 50;
+  pointer-events: none;
+  
+  /* IMPORTANTE: Deve essere visibile! */
+  opacity: 1; 
+  
+  border-radius: 50%; 
+  overflow: hidden;
+  background: black; /* Per vedere se il container c'è anche se il video non carica */
+}
+
+.scroll-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 
 /* --- TESTI DESKTOP --- */
 .text-content {

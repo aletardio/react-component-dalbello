@@ -62,7 +62,16 @@
             <!-- Step 02 -->
             <div class="circle-with-elements" data-rotation="120">
               <div class="large-circle">
-                <div class="white-circle"></div>
+                <div class="white-circle step-2">
+                  <!-- Dentro .visuals-scale-wrapper o .carousel-content -->
+                  <div id="video-container" class="video-wrapper">
+                    <!-- Video muto, playsinline per mobile. IMPORTANTE: preload="auto" -->
+                    <video id="scroll-video" class="scroll-video" muted playsinline preload="auto">
+                      <source src="/video/video-1.mp4" type="video/mp4">
+                      Il tuo browser non supporta il video tag.
+                    </video>
+                  </div>
+                </div>
               </div>
             </div>
 
