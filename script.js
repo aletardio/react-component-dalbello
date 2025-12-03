@@ -16,59 +16,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- CONFIGURAZIONE POSIZIONI (Coordinate per immagini da 200px) ---
 
-    // FOTO 1: CERCHIO ORDINATO (MISTO/ALTERNATO)
-  // Abbiamo scambiato l'ordine delle posizioni per alternare i tipi di prodotto
+  // FUORI DAL CERCHIO
   const circlePositions = [
-    
-    { x: -140, y: -280, rot: -60,  scale: 1 }, // 1
-    { x: 240,  y: -160, rot: 50,   scale: 1 },   
-    
-    // Immagine 3
-    { x: 20,   y: 320,  rot: 10,   scale: 1 },   
-    
-    // Immagine 4
-    { x: -260, y: -120, rot: -105,  scale: 1 },   
-    
-    // Immagine 5
-    { x: 80,   y: -250, rot: 20,   scale: 1 },   
-    
-    // Immagine 6
-    { x: 220,  y: 220,  rot: -45,  scale: 1 },   
-    
-    // Immagine 7
-    { x: -320, y: 60,   rot: 90,   scale: 1 },   
-    
-    // Immagine 8)
-    { x: 280,  y: 40,   rot: 30,   scale: 1 },   
-    
-    // Immagine 9
-    { x: -180, y: 240,  rot: -130, scale: 1 },   
-    
-    // Immagine 10
-    { x: -60,  y: 20,   rot: -85,  scale: 1 }    
+    { x: -140, y: -280, rot: -60,  scale: 1 },  // 1
+    { x: 240,  y: -160, rot: 50,   scale: 1 },  // 2
+    { x: 20,   y: 320,  rot: 10,   scale: 1 },  // 3
+    { x: -260, y: -120, rot: -105,  scale: 1 }, // 4 
+    { x: 80,   y: -250, rot: 20,   scale: 1 },  // 5
+    { x: 220,  y: 220,  rot: -45,  scale: 1 },  // 6
+    { x: -320, y: 60,   rot: 90,   scale: 1 },  // 7
+    { x: 280,  y: 40,   rot: 30,   scale: 1 },  // 8 
+    { x: -180, y: 240,  rot: -130, scale: 1 },  // 9
+    { x: -60,  y: 20,   rot: -85,  scale: 1 }   // 10
   ];
 
-
-    // FOTO 2: CAOS BILANCIATO (Riempiono bene lo spazio senza toccarsi)
+  // DENTRO IL CERCHIO
   const chaosPositions = [
-    // Immagine 1
-    { x: -110, y: -200, rot: -15, scale: 0.75 }, // 1. Alto-Sx
-    { x: 130,  y: -130, rot: 45,  scale: 0.65 }, // 2. Alto-Dx
-    { x: 0,    y: 225,  rot: 10,  scale: 1 },  // 3. Basso
-    { x: -170, y: -60,  rot: 10, scale: 1 }, // 4. Sx
-    { x: 30,   y: -170, rot: 5,   scale: 0.8 },  // 5. Alto
-    { x: 120,  y: 125,  rot: -30, scale: 0.75 }, // 6. Basso-Dx
-    { x: -170, y: 70,   rot: 80,  scale: 0.9 }, // 7. Sx-Basso
-    { x: 200,  y: 10,   rot: 25,  scale: 0.8 },  // 8. Dx
-    { x: -70,  y: 130,  rot: -120, scale: 0.75 },// 9. Basso-Sx
-    { x: -15,  y: 15,   rot: -20, scale: 0.9 }   // 10. Centro
+    { x: -110, y: -200, rot: -15, scale: 0.75 },  // 1
+    { x: 130,  y: -130, rot: 45,  scale: 0.65 },  // 2
+    { x: 0,    y: 225,  rot: 10,  scale: 1 },     // 3
+    { x: -170, y: -60,  rot: 10, scale: 1 },      // 4
+    { x: 30,   y: -170, rot: 5,   scale: 0.8 },   // 5
+    { x: 120,  y: 125,  rot: -30, scale: 0.75 },  // 6
+    { x: -170, y: 70,   rot: 80,  scale: 0.9 },   // 7
+    { x: 200,  y: 10,   rot: 25,  scale: 0.8 },   // 8
+    { x: -70,  y: 130,  rot: -120, scale: 0.75 }, // 9
+    { x: -15,  y: 15,   rot: -20, scale: 0.9 }    // 10
   ];
-
-
-
-
-
-
 
 
   function onScroll() {
@@ -93,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const ease = 1 - Math.pow(1 - morphProgress, 3); 
 
     // 1. ANIMAZIONE PRODOTTI (Da Cerchio a Caos)
-    // Assicurati che .product-container sia dentro il cerchio corretto (Step 1 o 2)
     const targetCircle = document.querySelector('.product-container').parentElement; 
     
     if (targetCircle) {
