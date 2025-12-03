@@ -3,63 +3,65 @@ document.addEventListener('DOMContentLoaded', () => {
   const rotatingContainer = document.getElementById('rotating-container');
   const orbitContainer = document.getElementById('orbit-container');
   
-  // Elementi Video (selezionato dentro lo Step 2 o ovunque sia nell'HTML)
-  const videoContainer = document.getElementById('video-container');
-  const video = document.getElementById('scroll-video');
+  // Selezioniamo i video in ordine di apparizione nel DOM
+  // Assumiamo: Primo video = Step 2, Secondo video = Step 3
+  const videos = document.querySelectorAll('video');
+  const vid1 = videos[0]; // Step 2
+  const vid2 = videos[1]; // Step 3
   
   const textStep1 = document.getElementById('text-step-1');
   const textStep2 = document.getElementById('text-step-2');
   const textStep3 = document.getElementById('text-step-3');
   const circles = document.querySelectorAll('.circle-with-elements');
 
-  // Setup Video
-  let videoDuration = 0;
-  if (video) {
-      video.addEventListener('loadedmetadata', () => {
-        videoDuration = video.duration;
-        video.currentTime = 0;
-      });
-      // Fallback nel caso i metadati siano già caricati
-      if (video.readyState >= 1) {
-          videoDuration = video.duration;
-          video.currentTime = 0;
-      }
+  // Setup Video 1
+  let dur1 = 0;
+  if (vid1) {
+      vid1.addEventListener('loadedmetadata', () => { dur1 = vid1.duration; vid1.currentTime = 0; });
+      // Fallback se già caricato
+      if (vid1.readyState >= 1) { dur1 = vid1.duration; vid1.currentTime = 0; }
+  }
+  
+  // Setup Video 2
+  let dur2 = 0;
+  if (vid2) {
+      vid2.addEventListener('loadedmetadata', () => { dur2 = vid2.duration; vid2.currentTime = 0; });
+      // Fallback se già caricato
+      if (vid2.readyState >= 1) { dur2 = vid2.duration; vid2.currentTime = 0; }
   }
 
-  // Inizializzazione rotazioni cerchi
+  // Inizializzazione rotazioni base
   circles.forEach((circle) => {
     const initialRotation = parseFloat(circle.getAttribute('data-rotation'));
     circle.style.transform = `rotate(${initialRotation}deg)`;
   });
 
-  // --- COORDINATE PRODOTTI (Definite UNA sola volta qui) ---
+  // --- CONFIGURAZIONE COORDINATE PRODOTTI (Step 1) ---
   
-  // Posizioni CERCHIO (Iniziali - Wide/Alternate)
   const circlePositions = [
-    { x: -140, y: -280, rot: -60,  scale: 1 },  // 1
-    { x: 240,  y: -160, rot: 50,   scale: 1 },  // 2
-    { x: 20,   y: 320,  rot: 10,   scale: 1 },  // 3
-    { x: -260, y: -120, rot: -105,  scale: 1 }, // 4 
-    { x: 80,   y: -250, rot: 20,   scale: 1 },  // 5
-    { x: 220,  y: 220,  rot: -45,  scale: 1 },  // 6
-    { x: -320, y: 60,   rot: 90,   scale: 1 },  // 7
-    { x: 280,  y: 40,   rot: 30,   scale: 1 },  // 8 
-    { x: -180, y: 240,  rot: -130, scale: 1 },  // 9
-    { x: -60,  y: 20,   rot: -85,  scale: 1 }   // 10
+    { x: -140, y: -280, rot: -60, scale: 1 },  // 1
+    { x: 240,  y: -160, rot: 50,  scale: 1 },  // 2
+    { x: 20,   y: 320,  rot: 10,  scale: 1 },  // 3
+    { x: -260, y: -120, rot: -105, scale: 1 }, // 4 
+    { x: 80,   y: -250, rot: 20,  scale: 1 },  // 5
+    { x: 220,  y: 220,  rot: -45, scale: 1 },  // 6
+    { x: -320, y: 60,   rot: 90,  scale: 1 },  // 7
+    { x: 280,  y: 40,   rot: 30,  scale: 1 },  // 8 
+    { x: -180, y: 240,  rot: -130, scale: 1 }, // 9
+    { x: -60,  y: 20,   rot: -85,  scale: 1 }  // 10
   ];
 
-  // Posizioni CAOS (Finali - Bilanciate)
   const chaosPositions = [
-    { x: -110, y: -200, rot: -15, scale: 0.75 },  // 1
-    { x: 130,  y: -130, rot: 45,  scale: 0.65 },  // 2
-    { x: 0,    y: 225,  rot: 10,  scale: 1 },     // 3
-    { x: -170, y: -60,  rot: 10, scale: 1 },      // 4
-    { x: 30,   y: -170, rot: 5,   scale: 0.8 },   // 5
-    { x: 120,  y: 125,  rot: -30, scale: 0.75 },  // 6
-    { x: -170, y: 70,   rot: 80,  scale: 0.9 },   // 7
-    { x: 200,  y: 10,   rot: 25,  scale: 0.8 },   // 8
-    { x: -70,  y: 130,  rot: -120, scale: 0.75 }, // 9
-    { x: -15,  y: 15,   rot: -20, scale: 0.9 }    // 10
+    { x: -110, y: -200, rot: -15, scale: 0.75 }, // 1
+    { x: 130,  y: -130, rot: 45,  scale: 0.65 }, // 2
+    { x: 0,    y: 225,  rot: 10,  scale: 1 },    // 3
+    { x: -170, y: -60,  rot: 10, scale: 1 },     // 4
+    { x: 30,   y: -170, rot: 5,   scale: 0.6 },  // 5
+    { x: 120,  y: 125,  rot: -30, scale: 0.65 }, // 6
+    { x: -170, y: 70,   rot: 80,  scale: 0.7 },  // 7
+    { x: 200,  y: 10,   rot: 25,  scale: 0.8 },  // 8
+    { x: -70,  y: 130,  rot: -120, scale: 0.75 },// 9
+    { x: -15,  y: 15,   rot: -20, scale: 0.9 }   // 10
   ];
 
   function onScroll() {
@@ -67,62 +69,88 @@ document.addEventListener('DOMContentLoaded', () => {
     const scrollableDistance = container.offsetHeight - window.innerHeight;
     let progress = Math.min(Math.max(-rect.top / scrollableDistance, 0), 1);
 
-    // --- DEFINIZIONE FASI SCROLL ---
-    // FASE 1 (0% - 25%): Step 1 (Prodotti) al centro. Animazione implosione.
-    const P1_END = 0.25; 
+    // --- TIMELINE FASI ---
     
-    // TRANSITION (25% - 35%): Rotazione veloce dell'orbita (-120°). Step 1 esce, Step 2 arriva.
-    const TRANSITION_END = 0.35;
+    // 0% - 15%: FASE 1 (Step 1 Implosione prodotti)
+    const P1_END = 0.15; 
     
-    // FASE 2 (35% - 85%): Step 2 (Video) FERMO al centro. Scrubbing del video.
-    const P2_END = 0.85;
+    // 15% - 25%: TRANSITION 1 (Rotazione da 0 a -120. Step 1 esce, Step 2 arriva)
+    const T1_END = 0.25;
     
-    // FASE 3 (85% - 100%): Step 2 esce. Rotazione orbita verso Step 3.
+    // 25% - 50%: FASE 2 (Step 2 FERMO. Video 1 Scrubbing)
+    const P2_END = 0.50;
+    
+    // 50% - 60%: TRANSITION 2 (Rotazione da -120 a -240. Step 2 esce, Step 3 arriva)
+    const T2_END = 0.60;
+    
+    // 60% - 95%: FASE 3 (Step 3 FERMO. Video 2 Scrubbing)
+    const P3_END = 0.95;
+    
+    // 95% - 100%: FINALE (Step 3 resta fisso al centro)
 
     let globalRotation = 0;
     let productMorph = 0;
-    let videoSeek = 0;
+    let seek1 = 0; // Scrub Video 1
+    let seek2 = 0; // Scrub Video 2
 
+    // LOGICA STATI
     if (progress < P1_END) {
-        // FASE 1: STEP 1 ATTIVO
-        globalRotation = 0; 
-        productMorph = progress / P1_END; // Da 0 a 1
-        videoSeek = 0;
-    } 
-    else if (progress < TRANSITION_END) {
-        // TRANSIZIONE: RUOTA ORBITA (-120)
-        const localProgress = (progress - P1_END) / (TRANSITION_END - P1_END);
-        globalRotation = -120 * localProgress;
+        // FASE 1: Step 1 attivo
+        globalRotation = 0;
+        productMorph = progress / P1_END; // 0 -> 1
+        seek1 = 0; seek2 = 0;
+    }
+    else if (progress < T1_END) {
+        // TRANSITION 1: Verso -120
+        const loc = (progress - P1_END) / (T1_END - P1_END);
+        globalRotation = -120 * loc;
         
-        productMorph = 1; // Prodotti finiti
-        videoSeek = 0;
+        productMorph = 1; // Prodotti restano collassati
+        seek1 = 0; seek2 = 0;
     }
     else if (progress < P2_END) {
-        // FASE 2: STEP 2 FERMO (VIDEO)
-        globalRotation = -120; // Bloccato su Step 2
+        // FASE 2: Step 2 Fermo (-120)
+        globalRotation = -120;
         
         productMorph = 1;
-        // Mappa lo scroll (lungo) al tempo del video
-        videoSeek = (progress - TRANSITION_END) / (P2_END - TRANSITION_END);
+        seek1 = (progress - T1_END) / (P2_END - T1_END); // 0 -> 1
+        seek2 = 0;
+    }
+    else if (progress < T2_END) {
+        // TRANSITION 2: Verso -240
+        const loc = (progress - P2_END) / (T2_END - P2_END);
+        globalRotation = -120 + (-120 * loc); // Va da -120 a -240
+        
+        productMorph = 1;
+        seek1 = 1; // Video 1 finito
+        seek2 = 0;
+    }
+    else if (progress < P3_END) {
+        // FASE 3: Step 3 Fermo (-240)
+        globalRotation = -240;
+        
+        productMorph = 1;
+        seek1 = 1;
+        seek2 = (progress - T2_END) / (P3_END - T2_END); // 0 -> 1
     }
     else {
-        // FASE 3: USCITA
-        const localProgress = (progress - P2_END) / (1 - P2_END);
-        globalRotation = -120 + (-120 * localProgress); // Va verso -240
+        // FINALE: Resta tutto fermo su Step 3
+        globalRotation = -240; // Bloccato al centro
         
         productMorph = 1;
-        videoSeek = 1; // Video finito
+        seek1 = 1;
+        seek2 = 1; // Video 2 finito
     }
 
-    // --- APPLICAZIONI ---
+    // --- APPLICAZIONI VISIVE ---
 
-    // 1. ORBITA
+    // 1. ORBITA (Rotazione Globale)
     rotatingContainer.style.transform = `translateX(-50%) rotate(${globalRotation}deg)`;
     if (orbitContainer) {
         orbitContainer.style.transform = `translateX(-50%) rotate(${globalRotation}deg)`;
     }
 
-    // 2. CONTRO-ROTAZIONE (Cruciale per tenere il video dritto)
+    // 2. CONTRO-ROTAZIONE (Per tenere dritti i video e i contenuti)
     circles.forEach((circle) => {
         const initialRotation = parseFloat(circle.getAttribute('data-rotation'));
         const currentGlobalRotation = initialRotation + globalRotation;
@@ -134,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 3. ANIMAZIONE PRODOTTI (Step 1)
     const products = document.querySelectorAll('.product-item');
-    const ease = 1 - Math.pow(1 - productMorph, 3); 
+    const ease = 1 - Math.pow(1 - productMorph, 3);
     
     products.forEach((prod, index) => {
         if (index < circlePositions.length) {
@@ -150,31 +178,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 4. VIDEO
-    if (video) {
-        if (Number.isFinite(videoDuration) && videoDuration > 0) {
-             video.currentTime = videoDuration * videoSeek;
-        }
+    // 4. VIDEO 1 (Scrubbing)
+    if (vid1 && Number.isFinite(dur1) && dur1 > 0) {
+        vid1.currentTime = dur1 * seek1;
     }
 
-    // 5. TESTI
-    // Step 1: Visibile Fase 1
-    let op1 = (progress < P1_END) ? 1 : 1 - ((progress - P1_END) / (TRANSITION_END - P1_END) * 2);
+    // 5. VIDEO 2 (Scrubbing)
+    if (vid2 && Number.isFinite(dur2) && dur2 > 0) {
+        vid2.currentTime = dur2 * seek2;
+    }
+
+    // 6. TESTI (Gestione Opacità)
+    
+    // Text Step 1: Visibile solo all'inizio, sparisce durante Transition 1
+    let op1 = (progress < P1_END) ? 1 : 1 - ((progress - P1_END) / (T1_END - P1_END) * 2);
     textStep1.style.opacity = Math.max(0, op1);
 
-    // Step 2: Visibile Fase 2
+    // Text Step 2: Appare in Transition 1, Sparisce in Transition 2
     let op2 = 0;
-    if (progress > P1_END && progress < P2_END) {
-        if (progress < TRANSITION_END) op2 = (progress - P1_END) / (TRANSITION_END - P1_END);
-        else op2 = 1;
-        // Fade out finale
-        if (progress > P2_END - 0.05) op2 = 1 - (progress - (P2_END - 0.05)) / 0.05;
+    if (progress > P1_END && progress < T2_END) {
+        if (progress < T1_END) op2 = (progress - P1_END) / (T1_END - P1_END); // Fade IN
+        else if (progress < P2_END) op2 = 1; // Full
+        else op2 = 1 - (progress - P2_END) / (T2_END - P2_END); // Fade OUT
     }
     textStep2.style.opacity = Math.max(0, Math.min(1, op2));
 
-    // Step 3: Visibile Fase 3
-    let op3 = (progress > P2_END) ? (progress - P2_END) / (1 - P2_END) * 2 : 0;
-    textStep3.style.opacity = Math.min(1, op3);
+    // Text Step 3: Appare in Transition 2 e RESTA VISIBILE ALLA FINE
+    let op3 = 0;
+    if (progress > P2_END) {
+        if (progress < T2_END) op3 = (progress - P2_END) / (T2_END - P2_END); // Fade IN
+        else op3 = 1; // Full e rimane 1 fino alla fine
+    }
+    textStep3.style.opacity = Math.max(0, Math.min(1, op3));
   }
 
   window.addEventListener('scroll', onScroll);
